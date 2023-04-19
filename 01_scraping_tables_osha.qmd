@@ -60,7 +60,7 @@ url <- "https://www.osha.gov/pls/imis/industry.search?sic=&sicgroup=&naicsgroup=
 ## read_html(): read the webpage/html document into R
 ```{r}
 #read the html content into R and assigns to webpage object
-webpage <- read_html(url, encoding = "windows-1252")
+webpage <- read_html(url)
 webpage
 ```
 Tip: to find the right encoding, run "document.inputEncoding" in the console tab.

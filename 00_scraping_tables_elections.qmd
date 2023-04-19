@@ -159,3 +159,42 @@ results
 ```
 
 And there we go. We now have a nice tidy dataframe of Maryland attorney general election results that we could ask some questions of.
+
+
+```{r}
+statewide <- results %>% 
+  summarise(total_peroutka = sum(peroutka),
+            total_brown = sum(brown),
+            total_write_ins = sum(write_ins)) 
+  
+```
+
+```{r}
+statewide <- statewide %>%  
+  mutate(total_all = total_brown + total_peroutka + total_write_ins, 
+         pct_peroutka = round_half_up(total_peroutka / total_all * 100, 1), 
+         pct_brown = round_half_up(total_brown / total_all * 100, 1), 
+         pct_write_ins = round_half_up(total_write_ins / total_all * 100, 1))
+```
+
+```{r}
+results <- results %>%  
+  mutate(total_all = brown + peroutka + write_ins, 
+         pct_peroutka = round_half_up(peroutka / total_all * 100, 1), 
+         pct_brown = round_half_up(brown / total_all * 100, 1), 
+         pct_write_ins = round_half_up(write_ins / total_all * 100, 1))
+```
+
+```{r}
+results <- results %>%  
+  mutate(margin_of_vic_peroutka = pct_peroutka - pct_brown, 
+         winner = if_else(pct_peroutka > pct_brown, "R", "D"))
+```
+ 
+```{r}
+results %>% 
+  group_by(winner) %>% 
+  summarise(count = n(), 
+            mean(margin_of_vic_peroutka))
+```
+
